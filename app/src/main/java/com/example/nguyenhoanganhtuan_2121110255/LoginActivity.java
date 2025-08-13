@@ -1,6 +1,10 @@
 package com.example.nguyenhoanganhtuan_2121110255;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +24,16 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Button btnNext = findViewById(R.id.btnLogin);
 
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText objpass = findViewById(R.id.txtPass);
+                String txtPhone = objpass.getText().toString();
+                Intent it = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(it);
+            }
+        });
     }
 }
