@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
                 } else {
                     // TODO: Xử lý login thực tế (ví dụ kiểm tra username/password)
-                    Toast.makeText(LoginActivity.this, "Login successful (demo)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 }
             }
         });
