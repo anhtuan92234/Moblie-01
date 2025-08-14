@@ -59,6 +59,18 @@
         android:backgroundTint="#add8e6"
         android:textColor="#e60600"
         android:textSize="20sp"
+        android:gravity="center"
         android:id="@+id/btnRegister"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:text="Đã có tài khoản? Đăng nhập"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:id="@+id/inputregister"
+        android:clickable="true"
+        android:focusable="true" />
 
 </LinearLayout>

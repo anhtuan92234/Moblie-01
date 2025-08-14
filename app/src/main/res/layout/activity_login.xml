@@ -57,7 +57,8 @@
         android:text="No account? Register"
         android:textSize="18dp"
         android:textColor="@color/black"
-        android:id="@+id/inputregister"/>
+        android:id="@+id/inputregister"
+        android:clickable="true"
+        android:focusable="true" />
 
-    
 </LinearLayout>

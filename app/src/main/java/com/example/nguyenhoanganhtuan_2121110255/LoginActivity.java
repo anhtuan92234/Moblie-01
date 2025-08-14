@@ -1,6 +1,7 @@
 package com.example.nguyenhoanganhtuan_2121110255;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +15,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText txtUsername, txtPass;
     Button btnLogin;
     TextView inputregister;
+    SharedPreferences prefs;
+    private final String API_URL = "https://6895908c039a1a2b288f7f07.mockapi.io/users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,27 +48,49 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         inputregister = findViewById(R.id.inputregister);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = txtUsername.getText().toString().trim();
-                String password = txtPass.getText().toString().trim();
-
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
-                } else {
-                    // TODO: Xử lý login thực tế (ví dụ kiểm tra username/password)
-                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                }
-            }
+        inputregister.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            finish();
         });
-        inputregister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Chuyển sang RegisterActivity
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
+
+        btnLogin.setOnClickListener(v -> {
+            String username = txtUsername.getText().toString().trim();
+            String password = txtPass.getText().toString().trim();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            StringRequest request = new StringRequest(Request.Method.POST, API_URL,
+                    response -> {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (obj.getBoolean("success")) {
+                                String token = obj.getString("token");
+                                SessionManager sm = new SessionManager(this);
+                                sm.saveUser(username, token);
+                                startActivity(new Intent(this, HomeActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> Toast.makeText(this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show()
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("username", username);
+                    params.put("password", password);
+                    return params;
+                }
+            };
+
+            Volley.newRequestQueue(this).add(request);
         });
     }
 }

@@ -1,11 +1,13 @@
 package com.example.nguyenhoanganhtuan_2121110255;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,9 +16,21 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegisterActivity extends AppCompatActivity {
     EditText txtUsername, txtemail, txtPass;
     Button btnRegister;
+    TextView inputregister;
+    private final String API_URL = "https://6895908c039a1a2b288f7f07.mockapi.io/users"; // Replace with your actual API URL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,41 +46,52 @@ public class RegisterActivity extends AppCompatActivity {
         txtemail = findViewById(R.id.txtemail);
         txtPass = findViewById(R.id.txtPass);
         btnRegister = findViewById(R.id.btnRegister);
+        inputregister = findViewById(R.id.inputregister);
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = txtUsername.getText().toString().trim();
-                String email = txtemail.getText().toString().trim();
-                String password = txtPass.getText().toString().trim();
+        inputregister.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
+        });
 
-                if(username.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Please enter username", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        btnRegister.setOnClickListener(v -> {
+            String user = txtUsername.getText().toString().trim();
+            String email = txtemail.getText().toString().trim();
+            String pass = txtPass.getText().toString().trim();
 
-                if(email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(RegisterActivity.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(password.isEmpty() || password.length() < 6) {
-                    Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // TODO: Xử lý lưu user (ví dụ database hoặc SharedPreferences)
-
-                Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-
-                // Quay về Login
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                // Nếu muốn xóa RegisterActivity khỏi stack để không back lại được:
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-
+            if (user.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+
+            StringRequest request = new StringRequest(Request.Method.POST, API_URL,
+                    response -> {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (obj.getBoolean("success")) {
+                                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(this, LoginActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> Toast.makeText(this, "Lỗi kết nối", Toast.LENGTH_SHORT).show()
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("username", user);
+                    params.put("email", email);
+                    params.put("password", pass);
+                    return params;
+                }
+            };
+
+            Volley.newRequestQueue(this).add(request);
         });
     }
 }
