@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:text="Login"
+        android:gravity="center"
         android:backgroundTint="#add8e6"
         android:textColor="#e60600"
         android:textSize="20sp"
@@ -56,7 +57,7 @@
         android:text="No account? Register"
         android:textSize="18dp"
         android:textColor="@color/black"
-        android:id="@+id/inputtext"/>
+        android:id="@+id/inputregister"/>
 
     
 </LinearLayout>
