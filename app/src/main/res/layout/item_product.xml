@@ -1,36 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:background="#FFFFFF"
+    android:padding="5dp">
 
     <ImageView
-        android:id="@+id/productImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_launcher_background"
-        android:layout_marginEnd="16dp" />
+        android:id="@+id/imgProduct"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/laptop_msi"
+        android:scaleType="centerCrop" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:text="Laptop MSI"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="5dp" />
 
-        <TextView
-            android:id="@+id/productName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tên sản phẩm"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/txtPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="15.500.000đ"
+        android:textColor="#FF5722"
+        android:gravity="center" />
 
-        <TextView
-            android:id="@+id/productPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Giá: 100,000đ"/>
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/btnAddToCart"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="drawable/shopping_cart"
+        android:layout_marginTop="5dp" />
 </LinearLayout>
