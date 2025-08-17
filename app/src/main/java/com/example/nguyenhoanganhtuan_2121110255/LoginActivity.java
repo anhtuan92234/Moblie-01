@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,35 +63,49 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            StringRequest request = new StringRequest(Request.Method.POST, API_URL,
+            StringRequest request = new StringRequest(Request.Method.GET, API_URL,
                     response -> {
                         try {
-                            JSONObject obj = new JSONObject(response);
-                            if (obj.getBoolean("success")) {
-                                String token = obj.getString("token");
-                                SessionManager sm = new SessionManager(this);
-                                sm.saveUser(username, token);
-                                startActivity(new Intent(this, HomeActivity.class));
-                                finish();
-                            } else {
-                                Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                            JSONArray users = new JSONArray(response);
+                            boolean found = false;
+
+                            for (int i = 0; i < users.length(); i++) {
+                                JSONObject user = users.getJSONObject(i);
+                                String u = user.getString("username");
+                                String p = user.getString("password");
+
+                                if (u.equals(username) && p.equals(password)) {
+                                    found = true;
+
+                                    // Lưu login bằng SharedPreferences
+                                    SharedPreferences prefs = getSharedPreferences("MyApp", MODE_PRIVATE);
+                                    prefs.edit()
+                                            .putString("username", u)
+                                            .apply();
+
+                                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+
+                                    // Chuyển sang HomeActivity
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    break;
+                                }
                             }
+
+                            if (!found) {
+                                Toast.makeText(LoginActivity.this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Toast.makeText(LoginActivity.this, "Lỗi JSON", Toast.LENGTH_SHORT).show();
                         }
                     },
-                    error -> Toast.makeText(this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show()
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("username", username);
-                    params.put("password", password);
-                    return params;
-                }
-            };
+                    error -> Toast.makeText(LoginActivity.this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show()
+            );
 
-            Volley.newRequestQueue(this).add(request);
+            Volley.newRequestQueue(LoginActivity.this).add(request);
         });
     }
 }

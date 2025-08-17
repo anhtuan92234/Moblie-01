@@ -1,6 +1,5 @@
 package com.example.nguyenhoanganhtuan_2121110255;
 
-import com.example.nguyenhoanganhtuan_2121110255.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,14 +7,10 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,8 +43,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // Dữ liệu mẫu
         list = new ArrayList<>();
-        list.add(new Product("Laptop MSI", 15500000, R.drawable.laptop_msi));
-        list.add(new Product("Lenovo Laptop", 54490000, R.drawable.lptop));
+        list.add(new Product("Laptop MSI", 22500000, R.drawable.laptop_msi));
+        list.add(new Product("Lenovo Laptop", 54490000, R.drawable.lptop_lenovo));
         list.add(new Product("SamSung Galaxy", 32490000, R.drawable.samsung_galaxy));
         list.add(new Product("ASIphone 16", 27390000, R.drawable.iphone16));
 
@@ -80,16 +75,17 @@ public class HomeActivity extends AppCompatActivity {
         });
         // Bottom navigation
         bottomNav.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.nav_home:
-                    Toast.makeText(this, "Trang chủ", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.nav_cart:
-                    Toast.makeText(this, "Giỏ hàng", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.nav_account:
-                    Toast.makeText(this, "Tài khoản", Toast.LENGTH_SHORT).show();
-                    return true;
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                Toast.makeText(this, "Trang chủ", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (id == R.id.nav_cart) {
+                Toast.makeText(this, "Giỏ hàng", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (id == R.id.nav_account) {
+                Toast.makeText(this, "Tài khoản", Toast.LENGTH_SHORT).show();
+                return true;
             }
             return false;
         });
@@ -99,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
         String keyword = edtSearch.getText().toString().trim().toLowerCase();
         filteredList.clear();
         for (Product p : list) {
-            if (p.name.toLowerCase().contains(keyword)) {
+            if (p.getName().toLowerCase().contains(keyword)) {
                 filteredList.add(p);
             }
         }

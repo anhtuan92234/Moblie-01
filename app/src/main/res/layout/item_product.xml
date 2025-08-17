@@ -35,6 +35,6 @@
         android:id="@+id/btnAddToCart"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="drawable/shopping_cart"
+        android:src="@drawable/shopping_cart_icon"
         android:layout_marginTop="5dp" />
 </LinearLayout>

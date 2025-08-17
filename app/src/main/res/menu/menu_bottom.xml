@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/nav_cart"
-        android:icon="@drawable/shopping_cart"
+        android:icon="@drawable/shopping_cart_icon"
         android:title="Giỏ hàng" />
 
     <item

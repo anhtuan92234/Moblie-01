@@ -1,16 +1,15 @@
 package com.example.nguyenhoanganhtuan_2121110255;
 
-
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.nguyenhoanganhtuan_2121110255.Product;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -35,9 +34,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product p = list.get(position);
-        holder.tvName.setText(p.name);
-        holder.tvPrice.setText(NumberFormat.getInstance(new Locale("vi", "VN")).format(p.price) + " đ");
-        holder.imgProduct.setImageResource(p.image);
+
+        // Gán dữ liệu sản phẩm vào View
+        holder.tvName.setText(p.getName());
+        holder.tvPrice.setText(
+                NumberFormat.getInstance(new Locale("vi", "VN")).format(p.getPrice()) + " đ");
+        holder.imgProduct.setImageResource(p.getImage());
+
+        // Khi click vào 1 item -> mở ProductDetailActivity
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("name", p.getName());
+            intent.putExtra("price", p.getPrice());
+            intent.putExtra("image", p.getImage());
+            context.startActivity(intent);
+        });
     }
 
     @Override

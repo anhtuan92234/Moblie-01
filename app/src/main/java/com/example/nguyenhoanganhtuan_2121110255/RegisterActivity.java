@@ -29,7 +29,7 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
     EditText txtUsername, txtemail, txtPass;
     Button btnRegister;
-    TextView inputregister;
+    TextView txtLogin;
     private final String API_URL = "https://6895908c039a1a2b288f7f07.mockapi.io/users"; // Replace with your actual API URL
 
     @Override
@@ -46,9 +46,9 @@ public class RegisterActivity extends AppCompatActivity {
         txtemail = findViewById(R.id.txtemail);
         txtPass = findViewById(R.id.txtPass);
         btnRegister = findViewById(R.id.btnRegister);
-        inputregister = findViewById(R.id.inputregister);
+        txtLogin = findViewById(R.id.txtLogin);
 
-        inputregister.setOnClickListener(v -> {
+        txtLogin.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
         });
@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
             String pass = txtPass.getText().toString().trim();
 
             if (user.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -68,18 +68,18 @@ public class RegisterActivity extends AppCompatActivity {
                     response -> {
                         try {
                             JSONObject obj = new JSONObject(response);
-                            if (obj.getBoolean("success")) {
-                                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, LoginActivity.class));
+
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công! Hãy đăng nhập", Toast.LENGTH_SHORT).show();
+                                // 👉 Sau khi đăng ký thành công thì quay lại Login
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(intent);
                                 finish();
-                            } else {
-                                Toast.makeText(this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
-                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     },
-                    error -> Toast.makeText(this, "Lỗi kết nối", Toast.LENGTH_SHORT).show()
+                    error -> Toast.makeText(RegisterActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show()
             ) {
                 @Override
                 protected Map<String, String> getParams() {
