@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +28,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         txtName = findViewById(R.id.txtProductName);
         txtPrice = findViewById(R.id.txtProductPrice);
         btnBuyNow = findViewById(R.id.btnBuyNow);
+        btnBack = findViewById(R.id.btnBack);
 
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
@@ -41,13 +43,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Xử lý khi bấm nút "Mua ngay"
         btnBuyNow.setOnClickListener(v -> {
-            // Sau này có thể mở giỏ hàng hoặc màn hình thanh toán
-            // Tạm thời chỉ hiện thông báo
-            android.widget.Toast.makeText(
-                    this,
-                    "Bạn đã chọn mua: " + name,
-                    android.widget.Toast.LENGTH_SHORT
-            ).show();
+            CartActivity.cartList.add(new Product(name, price, imageRes));
+            Toast.makeText(this, "Đã thêm vào giỏ: " + name, Toast.LENGTH_SHORT).show();
         });
         btnBack.setOnClickListener(v -> {
             Intent homeIntent = new Intent(ProductDetailActivity.this, HomeActivity.class);

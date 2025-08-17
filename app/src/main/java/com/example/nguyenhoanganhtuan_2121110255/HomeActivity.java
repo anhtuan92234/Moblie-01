@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,22 +76,25 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         });
         // Bottom navigation
+        bottomNav.setSelectedItemId(R.id.nav_home); // chọn home mặc định
+
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-
             if (id == R.id.nav_home) {
-                Toast.makeText(this, "Trang chủ", Toast.LENGTH_SHORT).show();
-                return true;
+                return true; // đang ở home
             } else if (id == R.id.nav_cart) {
-                Toast.makeText(this, "Giỏ hàng", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, CartActivity.class));
+                overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.nav_account) {
-                Toast.makeText(this, "Tài khoản", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, AccountActivity.class));
+                overridePendingTransition(0, 0);
                 return true;
             }
             return false;
         });
     }
+
     // Hàm tìm kiếm
     private void searchProduct() {
         String keyword = edtSearch.getText().toString().trim().toLowerCase();
