@@ -34,7 +34,6 @@ android {
 dependencies {
 
     implementation(libs.appcompat)
-    implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation ("androidx.recyclerview:recyclerview:1.3.0")
@@ -43,5 +42,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation ("com.android.volley:volley:1.2.1")
-    implementation ("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.11.0")
 }
