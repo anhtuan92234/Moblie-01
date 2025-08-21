@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,8 +38,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         // Gán dữ liệu sản phẩm vào View
         holder.tvName.setText(p.getName());
-        holder.tvPrice.setText(
-                NumberFormat.getInstance(new Locale("vi", "VN")).format(p.getPrice()) + " đ");
+        holder.tvPrice.setText(NumberFormat.getInstance(new Locale("vi", "VN")).format(p.getPrice()) + " đ");
         holder.imgProduct.setImageResource(p.getImage());
 
         // Khi click vào 1 item -> mở ProductDetailActivity
@@ -48,6 +48,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             intent.putExtra("price", p.getPrice());
             intent.putExtra("image", p.getImage());
             context.startActivity(intent);
+        });
+
+        // Khi click vào nút cart -> thêm sản phẩm vào giỏ hàng
+        holder.btnAddToCart.setOnClickListener(v -> {
+            CartManager.addToCart(p);
+            Toast.makeText(context, p.getName() + " đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         });
     }
 

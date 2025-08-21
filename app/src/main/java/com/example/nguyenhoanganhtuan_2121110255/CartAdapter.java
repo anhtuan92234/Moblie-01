@@ -39,20 +39,38 @@ public class CartAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_cart, parent, false);
+            holder = new ViewHolder();
+            holder.img = convertView.findViewById(R.id.imgCartProduct);
+            holder.name = convertView.findViewById(R.id.txtCartName);
+            holder.price = convertView.findViewById(R.id.txtCartPrice);
+            holder.btnRemove = convertView.findViewById(R.id.btnRemove);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
-
         Product p = cartList.get(position);
 
-        ImageView img = convertView.findViewById(R.id.imgCartProduct);
-        TextView name = convertView.findViewById(R.id.txtCartName);
-        TextView price = convertView.findViewById(R.id.txtCartPrice);
+        holder.img.setImageResource(p.getImage());
+        holder.name.setText(p.getName());
+        holder.price.setText(NumberFormat.getInstance(new Locale("vi", "VN")).format(p.getPrice()) + " đ");
 
-        img.setImageResource(p.getImage());
-        name.setText(p.getName());
-        price.setText(NumberFormat.getInstance(new Locale("vi", "VN")).format(p.getPrice()) + " đ");
+        // Xóa sản phẩm
+        holder.btnRemove.setOnClickListener(v -> {
+            CartManager.removeFromCart(p);
+            notifyDataSetChanged();
 
+            if (context instanceof CartActivity) {
+                ((CartActivity) context).updateTotalPrice();
+            }
+        });
         return convertView;
+    }
+    static class ViewHolder {
+        ImageView img, btnRemove;
+        TextView name, price;
     }
 }

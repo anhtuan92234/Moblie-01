@@ -36,22 +36,17 @@ public class CartActivity extends AppCompatActivity {
         txtTotalPrice = findViewById(R.id.txtTotalPrice);
         bottomNav = findViewById(R.id.bottomNav);
 
-        // Hiển thị giỏ hàng
-        if (cartList.isEmpty()) {
+        if (CartManager.getCart().isEmpty()) {
             Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
         }
-
-        CartAdapter adapter = new CartAdapter(this, cartList);
+        CartAdapter adapter = new CartAdapter(this, CartManager.getCart());
         listViewCart.setAdapter(adapter);
 
         // Tính tổng tiền
         updateTotalPrice();
     }
-    private void updateTotalPrice() {
-        int total = 0;
-        for (Product p : cartList) {
-            total += p.getPrice();
-        }
+    public void updateTotalPrice() {
+        int total = CartManager.getTotalPrice();
         txtTotalPrice.setText("Tổng cộng: " + NumberFormat.getInstance(new Locale("vi", "VN")).format(total) + " đ");
 
         bottomNav.setSelectedItemId(R.id.nav_cart);

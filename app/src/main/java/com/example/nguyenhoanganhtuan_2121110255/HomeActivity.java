@@ -72,8 +72,14 @@ public class HomeActivity extends AppCompatActivity {
         });
         // Đăng xuất
         btnLogout.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            // Xóa session
+            SessionManager sessionManager = new SessionManager(HomeActivity.this);
+            sessionManager.logout();
+
+            // Quay về Login, đồng thời clear hết Activity stack
+            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
         // Bottom navigation
         bottomNav.setSelectedItemId(R.id.nav_home); // chọn home mặc định
@@ -106,4 +112,4 @@ public class HomeActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
-    }
+}
