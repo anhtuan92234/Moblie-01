@@ -1,9 +1,7 @@
 package com.example.nguyenhoanganhtuan_2121110255;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,15 +21,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class LoginActivity extends AppCompatActivity {
-
     EditText txtUsername, txtPass;
     Button btnLogin;
-    TextView inputregister;
-    SharedPreferences prefs;
+    TextView inputRegister;
+    SessionManager sessionManager;
     private final String API_URL = "https://6895908c039a1a2b288f7f07.mockapi.io/users";
 
     @Override
@@ -39,17 +33,29 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         txtUsername = findViewById(R.id.txtUsername);
         txtPass = findViewById(R.id.txtPass);
         btnLogin = findViewById(R.id.btnLogin);
-        inputregister = findViewById(R.id.inputregister);
+        inputRegister = findViewById(R.id.inputregister);
 
-        inputregister.setOnClickListener(v -> {
+        // ✅ Khởi tạo SessionManager
+        sessionManager = new SessionManager(this);
+
+        // Nếu đã login thì vào thẳng Home
+        if (sessionManager.getUsername() != null) {
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+            return;
+        }
+
+        inputRegister.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             finish();
         });
@@ -62,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             StringRequest request = new StringRequest(Request.Method.GET, API_URL,
                     response -> {
                         try {
@@ -73,15 +78,16 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONObject user = users.getJSONObject(i);
                                 String u = user.getString("username");
                                 String p = user.getString("password");
+                                String e = user.getString("email");
+                                String id = user.getString("id"); // ✅ lấy id từ API
 
                                 if (u.equals(username) && p.equals(password)) {
                                     found = true;
 
-                                    // Lưu login bằng SharedPreferences
-                                    SharedPreferences prefs = getSharedPreferences("MyApp", MODE_PRIVATE);
-                                    prefs.edit()
-                                            .putString("username", u)
-                                            .apply();
+                                    // ✅ Lưu session qua SessionManager
+                                    sessionManager.saveUser(id, u, e, p, "mock_token");
+                                    // Nếu muốn lưu thêm email và password, bạn có thể mở rộng SessionManager
+                                    // để có saveUser(username, email, password, id)
 
                                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
 
@@ -92,11 +98,9 @@ public class LoginActivity extends AppCompatActivity {
                                     break;
                                 }
                             }
-
                             if (!found) {
                                 Toast.makeText(LoginActivity.this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(LoginActivity.this, "Lỗi JSON", Toast.LENGTH_SHORT).show();

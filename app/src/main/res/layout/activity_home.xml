@@ -28,14 +28,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ĐĂNG XUẤT"
-            android:textAllCaps="false"
-            android:backgroundTint="#D32F2F"
-            android:textColor="#FFFFFF" />
     </LinearLayout>
 
     <LinearLayout
